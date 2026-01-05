@@ -36,30 +36,45 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
   }
 
   return (
-    <div className="space-y-6 p-4">
-      <header className="space-y-3">
+    <main className="mx-auto max-w-6xl px-4 py-6 space-y-6">
+      <header className="space-y-4">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-semibold tracking-tight">F1 News Hub</h1>
+          <p className="text-sm text-zinc-600">
+            Headlines from multiple sources. Always links to the original.
+          </p>
+        </div>
+
         <input
-          className="w-full rounded border px-3 py-2"
+          className="w-full rounded-xl border bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-400 focus:ring-2 focus:ring-black/10"
           placeholder="Search headlines…"
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
 
         <div className="flex flex-wrap gap-2">
-          {sources.map((s) => (
-            <button
-              key={s.id}
-              onClick={() => toggleSource(s.id)}
-              className={`rounded border px-3 py-1 text-sm ${selected.has(s.id) ? "bg-black text-white" : ""
-                }`}
-            >
-              {s.name}
-            </button>
-          ))}
+          {sources.map((s) => {
+            const active = selected.has(s.id);
+            return (
+              <button
+                key={s.id}
+                onClick={() => toggleSource(s.id)}
+                className={[
+                  "rounded-full border px-3 py-1 text-sm transition",
+                  active
+                    ? "bg-black text-white border-black"
+                    : "bg-white hover:bg-zinc-50",
+                ].join(" ")}
+              >
+                {s.name}
+              </button>
+            );
+          })}
+
           {selected.size > 0 && (
             <button
               onClick={() => setSelected(new Set())}
-              className="rounded border px-3 py-1 text-sm"
+              className="rounded-full border px-3 py-1 text-sm bg-white hover:bg-zinc-50 transition"
             >
               Clear
             </button>
@@ -67,44 +82,81 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
         </div>
       </header>
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {filtered.map((it) => (
-          <article key={it.id} className="rounded border p-3 space-y-2">
+          <article
+            key={it.id}
+            className="
+              break-inside-avoid mb-6
+              group relative overflow-hidden rounded-2xl border bg-white
+              shadow-sm transition
+              hover:shadow-lg hover:border-zinc-200
+              focus-within:ring-2 focus-within:ring-black/10
+            "
+          >
             {it.image && (
-              <div className="relative">
+              <div className="relative h-44 w-full overflow-hidden bg-zinc-100">
                 <Image
                   src={it.image}
                   alt=""
-                  width={500}
-                  height={300}
-                  className="w-full max-h-64 object-cover rounded"
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                   loading="lazy"
-                  onError={(e) => (e.currentTarget.style.display = "none")}
+                  onError={(e) => {
+                    // Hide the whole image wrapper if the image fails
+                    const wrapper = e.currentTarget.parentElement;
+                    if (wrapper) wrapper.style.display = "none";
+                  }}
                 />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-black/0 to-black/0" />
 
-                {(
-                  <span className="absolute bottom-2 left-2 text-xs bg-black/60 text-white px-2 py-1 rounded">
+                {/* Show badge only for default/source images */}
+                {it.image.startsWith("/sources/") && (
+                  <span className="absolute left-3 top-3 rounded-full bg-black/70 px-2 py-1 text-xs text-white">
                     {it.sourceName}
                   </span>
                 )}
               </div>
             )}
 
-            <div className="text-xs opacity-70 flex gap-2">
-              <span>{it.sourceName}</span>
-              <span>•</span>
-              {it.publishedAt && it.sourceId !== "f1" && (
-                <time dateTime={it.publishedAt}>
-                  {new Date(it.publishedAt).toLocaleString()}
-                </time>
+            <div className="p-4 space-y-2">
+              <div className="flex items-center gap-2 text-xs text-zinc-500">
+                <span className="rounded-full border px-2 py-0.5">
+                  {it.sourceName}
+                </span>
+                <span className="text-zinc-300">•</span>
+
+                {it.publishedAt && it.sourceId !== "f1" ? (
+                  <time dateTime={it.publishedAt}>
+                    {new Date(it.publishedAt).toLocaleDateString(undefined, {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </time>
+                ) : (
+                  <span className="text-zinc-400">Undated</span>
+                )}
+              </div>
+
+              <h2 className="text-base font-semibold leading-snug tracking-tight">
+                <a
+                  href={it.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="outline-none hover:underline focus-visible:underline"
+                >
+                  {it.title}
+                </a>
+              </h2>
+
+              {it.summary && (
+                <p className="text-sm leading-relaxed text-zinc-600 line-clamp-3">
+                  {it.summary}
+                </p>
               )}
             </div>
-
-            <a className="text-lg font-medium underline" href={it.url} target="_blank" rel="noreferrer">
-              {it.title}
-            </a>
-
-            {it.summary && <p className="text-sm opacity-90">{it.summary}</p>}
           </article>
         ))}
 
@@ -112,6 +164,6 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
           <p className="opacity-70">No results.</p>
         )}
       </section>
-      </div>
+    </main>
   );
 }

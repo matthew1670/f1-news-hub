@@ -12,6 +12,7 @@ export const FEEDS: FeedDef[] = [
   { id: "fia", name: "FIA Press Releases", url: "https://www.fia.com/rss/press-release" },
   { id: "racers", name: "Racers", url: "https://racer.com/f1/feed" },
   { id: "f1technical", name: "F1 Technical", url: "https://www.f1technical.net/rss/news.xml" },
+  { id: "kymillman", name: "KyMillman.com", url: "https://www.kymillman.com/feed" },
 ];
 
 export const FEED_DEFAULT_IMAGES: Record<string, string> = {
@@ -22,4 +23,5 @@ export const FEED_DEFAULT_IMAGES: Record<string, string> = {
   fia: "https://www.fia.com/sites/default/files/fia_logo_square.png",
   racers: "/sources/racefansdotnet.jpg",
   f1technical: "https://f1tcdn.net/images/banners/f1t_logo2.gif",
+  kymillman: "https://www.kymillman.com/wp-content/uploads/2020/04/cropped-kymillman-logo-1.png",
 };
