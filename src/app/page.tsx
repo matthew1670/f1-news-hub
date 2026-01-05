@@ -2,7 +2,7 @@ import FeedClient from "@/components/FeedClient";
 import type { NewsItem } from "@/lib/types";
 
 async function getItems(): Promise<NewsItem[]> {
-  const res = await fetch("http://localhost:3000/api/items", {
+  const res = await fetch("/api/items", {
     cache: "no-store",
   });
   if (!res.ok) return [];
