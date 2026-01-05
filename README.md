@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# F1 News Hub 🏎️
 
-## Getting Started
+F1 News Hub is a small Next.js app that aggregates Formula 1 news from multiple reliable sources into a single, clean feed.
 
-First, run the development server:
+It pulls headlines via RSS, normalises the data server-side, and always links back to the original articles.
+
+## Features
+
+- Aggregates F1 news from multiple sources (e.g. Formula1.com, Autosport, RaceFans)
+- Server-side RSS fetching and caching
+- Source filtering (enabled by default, toggle to exclude)
+- Search with instant filtering and clear button
+- Responsive 3-column / masonry-style layout
+- Article images with sensible fallbacks per source
+- No scraping of full article content
+
+## Tech stack
+
+- **Next.js** (App Router)
+- **React**
+- **TypeScript**
+- **Tailwind CSS**
+- **rss-parser**
+
+## Getting started
+
+### Prerequisites
+
+- Node.js 18+
+
+### Install dependencies
+
+```bash
+npm install
+````
+
+### Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```url
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## How it works
 
-## Learn More
+- RSS feeds are fetched server-side in an API route
+- Items are normalised into a common format
+- Images are extracted from RSS media fields or embedded HTML
+- Per-feed default images are used when no item image exists
+- Results are cached in-memory for a short time to avoid hammering feeds
 
-To learn more about Next.js, take a look at the following resources:
+## Notes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Some feeds (e.g. RaceFans) do not provide per-article images in RSS — defaults are used instead
+- Some feeds (e.g. Formula1.com) do not include publish dates in RSS
+- This project is intended for personal use / learning
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Future ideas
 
-## Deploy on Vercel
+- Dark mode
+- Saved filters
+- Article tags (Tech / Race / Opinion)
+- Background revalidation / cron refresh
+- Optional Open Graph image fetching
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Built for fun and learning. Always click through and support the original publishers.

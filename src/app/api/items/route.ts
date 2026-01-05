@@ -10,6 +10,7 @@ const parser = new Parser({
       ["media:content", "mediaContent"],
       ["media:thumbnail", "mediaThumbnail"],
       ["enclosure", "enclosure"],
+      ["content:encoded", "contentEncoded"],
     ],
   },
 });
@@ -50,11 +51,11 @@ function pickImage(item: any): string | undefined {
 
   // 5) Fallback: scrape from HTML fields (try more than one)
   return extractFirstImgSrc(
-    item?.content ||
-    item?.["content:encoded"] ||
-    item?.contentSnippet ||
-    item?.summary ||
-    item?.description
+    item?.contentEncoded ||
+      item?.content ||
+      item?.contentSnippet ||
+      item?.summary ||
+      item?.description
   );
 }
 
@@ -95,7 +96,7 @@ export async function GET() {
           const summaryRaw = it.contentSnippet || it.content || it.summary || it.description;
           const summary = makeSummary(summaryRaw, 300);
 
-          const image = pickImage(it) || FEED_DEFAULT_IMAGES[feed.id] || "!";
+          const image = pickImage(it) ?? FEED_DEFAULT_IMAGES[feed.id];
 
           return {
             id: makeId(`${feed.id}:${url}`),

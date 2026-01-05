@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "*.racer.com" },
       { protocol: "https", hostname: "f1tcdn.net" },
       { protocol: "https", hostname: "www.kymillman.com" },
+      { protocol: "https", hostname: "sportsbase.io" },
     ],
   },
 };

@@ -20,9 +20,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} antialiased`} suppressHydrationWarning>
-        <header className="border-b p-4 font-semibold">
-          F1 News Hub
-        </header>
 
         <main>{children}</main>
 

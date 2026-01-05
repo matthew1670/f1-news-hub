@@ -17,8 +17,14 @@ export function stripHtml(html?: string) {
 // very light image extraction from RSS description HTML
 export function extractFirstImgSrc(html?: string) {
   if (!html) return undefined;
-  const m = html.match(/<img[^>]+src=["']([^"']+)["']/i);
-  return m?.[1];
+
+  let m = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+  if (m?.[1]) return m[1];
+
+  m = html.match(/<img[^>]+data-src=["']([^"']+)["']/i);
+  if (m?.[1]) return m[1];
+
+  return undefined;
 }
 
 export function makeSummary(
