@@ -5,7 +5,6 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   images: {
     remotePatterns: [
-      // Autosport enclosure images often come from Motorsport CDN
       { protocol: "https", hostname: "*.motorsport.com" },
       { protocol: "https", hostname: "www.formula1.com" },
       { protocol: "https", hostname: "media.formula1.com" },

@@ -79,6 +79,7 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
                   height={300}
                   className="w-full max-h-64 object-cover rounded"
                   loading="lazy"
+                  onError={(e) => (e.currentTarget.style.display = "none")}
                 />
 
                 {(
@@ -92,9 +93,11 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
             <div className="text-xs opacity-70 flex gap-2">
               <span>{it.sourceName}</span>
               <span>•</span>
-              <time dateTime={it.publishedAt}>
-                {new Date(it.publishedAt).toLocaleString()}
-              </time>
+              {it.publishedAt && it.sourceId !== "f1" && (
+                <time dateTime={it.publishedAt}>
+                  {new Date(it.publishedAt).toLocaleString()}
+                </time>
+              )}
             </div>
 
             <a className="text-lg font-medium underline" href={it.url} target="_blank" rel="noreferrer">
