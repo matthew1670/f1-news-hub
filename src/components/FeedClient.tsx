@@ -16,13 +16,8 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
     [sources]
   );
 
-  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [selected, setSelected] = useState<Set<string>>(() => new Set(sources.map((s) => s.id)));
   const [q, setQ] = useState("");
-
-  // Start with all sources enabled (and keep in sync if source list changes)
-  useEffect(() => {
-    setSelected(new Set(allSourceIds));
-  }, [allSourceIds]);
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -80,15 +75,15 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
       <header className="space-y-4">
         <div className="flex items-end justify-between gap-4">
           <div className="space-y-1">
-            <h1 className="text-3xl font-semibold tracking-tight">
+            <h1 className="page-title">
               F1 News Hub
             </h1>
-            <p className="text-sm text-zinc-600">
+            <p className="page-subtitle">
               Headlines from multiple sources. Always links to the original.
             </p>
           </div>
 
-          <div className="hidden sm:block text-sm text-zinc-500">
+          <div className="result-count">
             {filtered.length} articles
           </div>
         </div>
@@ -96,19 +91,14 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
   <input
-    className="
-      w-full rounded-2xl border bg-white
-      pl-9 pr-9 py-2.5 text-sm shadow-sm
-      outline-none transition
-      focus:border-zinc-400 focus:ring-2 focus:ring-black/10
-    "
+    className="search-input"
     placeholder="Search headlines…"
     value={q}
     onChange={(e) => setQ(e.target.value)}
   />
 
   {/* Search icon */}
-  <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
+  <span className="search-icon">
     ⌕
   </span>
 
@@ -117,14 +107,7 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
     <button
       type="button"
       onClick={() => setQ("")}
-      className="
-        absolute right-2 top-1/2 -translate-y-1/2
-        rounded-full p-1
-        text-zinc-400 hover:text-zinc-700
-        hover:bg-zinc-100
-        transition
-        cursor-pointer
-      "
+      className="search-clear-button"
       aria-label="Clear search"
     >
       ✕
@@ -138,15 +121,15 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
               <button
                 type="button"
                 onClick={() => setSourcesOpen((v) => !v)}
-                className="inline-flex items-center gap-2 rounded-2xl border bg-white px-4 py-2.5 text-sm shadow-sm hover:bg-zinc-50 transition"
+                className="sources-button"
                 aria-haspopup="menu"
                 aria-expanded={sourcesOpen}
               >
                 Sources
-                <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-700">
+                <span className="sources-badge">
                   {selectedCount}/{totalCount}
                 </span>
-                <span className="text-zinc-400">{sourcesOpen ? "▲" : "▼"}</span>
+                <span className="sources-arrow">{sourcesOpen ? "▲" : "▼"}</span>
               </button>
 
               {sourcesOpen && (
@@ -155,10 +138,10 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
                   className="absolute right-0 mt-2 w-72 rounded-2xl border bg-white shadow-lg overflow-hidden z-10"
                 >
                   <div className="p-3 border-b bg-zinc-50">
-                    <div className="text-sm font-medium text-zinc-900">
+                    <div className="dropdown-title">
                       Sources
                     </div>
-                    <div className="text-xs text-zinc-600">
+                    <div className="dropdown-desc">
                       Toggle sources to include/exclude them.
                     </div>
                   </div>
@@ -171,7 +154,7 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
                           key={s.id}
                           className="flex items-center justify-between gap-3 rounded-xl px-2 py-2 hover:bg-zinc-50 cursor-pointer"
                         >
-                          <span className="text-sm text-zinc-800">
+                          <span className="source-name">
                             {s.name}
                           </span>
 
@@ -263,10 +246,10 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
                     if (wrapper) wrapper.style.display = "none";
                   }}
                 />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-black/0" />
+                <div className="pointer-events-none absolute inset-0 from-black/30 via-black/0 to-black/0" />
 
                 {it.image.startsWith("/sources/") && (
-                  <span className="absolute left-3 top-3 rounded-full bg-black/70 px-2 py-1 text-xs text-white">
+                  <span className="news-item-image-source">
                     {it.sourceName}
                   </span>
                 )}
@@ -274,14 +257,14 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
             )}
 
             <div className="p-4 space-y-2">
-              <div className="flex items-center gap-2 text-xs text-zinc-500">
-                <span className="rounded-full border px-2 py-0.5">
+              <div className="news-item-meta">
+                <span className="meta-badge">
                   {it.sourceName}
                 </span>
-                <span className="text-zinc-300">•</span>
+                <span className="meta-sep">•</span>
 
                 {it.publishedAt && it.sourceId !== "f1" ? (
-                  <time dateTime={it.publishedAt}>
+                  <time className="news-item-date" dateTime={it.publishedAt}>
                     {new Date(it.publishedAt).toLocaleDateString(undefined, {
                       year: "numeric",
                       month: "short",
@@ -289,11 +272,11 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
                     })}
                   </time>
                 ) : (
-                  <span className="text-zinc-400">Undated</span>
+                  <span className="news-item-date">Undated</span>
                 )}
               </div>
 
-              <h2 className="text-base font-semibold leading-snug tracking-tight">
+              <h2 className="news-item-title">
                 <a
                   href={it.url}
                   target="_blank"
@@ -305,7 +288,7 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
               </h2>
 
               {it.summary && (
-                <p className="text-sm leading-relaxed text-zinc-600 line-clamp-3">
+                <p className="news-item-summary">
                   {it.summary}
                 </p>
               )}
@@ -314,7 +297,7 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
         ))}
 
         {filtered.length === 0 && (
-          <p className="text-zinc-600">No results.</p>
+          <p className="no-results">No results.</p>
         )}
       </section>
     </main>
