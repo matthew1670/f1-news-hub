@@ -47,8 +47,8 @@ export default function FeedPageClient({ items }: { items: NewsItem[] }) {
     <div className="lg:grid lg:grid-cols-[280px_1fr] lg:gap-6">
       <div className="lg:col-span-2">
         <Header
-          q={SearchQuery}
-          setQ={setSearchQuery}
+          query={SearchQuery}
+          setQuery={setSearchQuery}
           sources={sources}
           selected={selectedSources}
           toggleSource={toggleSource}

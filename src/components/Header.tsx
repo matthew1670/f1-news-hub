@@ -4,15 +4,15 @@ import SearchBox from "./SearchBox";
 import SourcesDropdown from "./SourcesDropdown";
 
 export default function Header({
-  q,
-  setQ,
+  query,
+  setQuery,
   sources,
   selected,
   toggleSource,
   reset,
 }: {
-  q: string;
-  setQ: (v: string) => void;
+  query: string;
+  setQuery: (v: string) => void;
   sources: { id: string; name: string }[];
   selected: Set<string>;
   toggleSource: (id: string) => void;
@@ -28,7 +28,7 @@ export default function Header({
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <SearchBox value={q} onChange={setQ} />
+        <SearchBox value={query} onChange={setQuery} />
 
         <div className="lg:hidden flex items-center gap-2 sm:width-full justify-end">
           <SourcesDropdown
