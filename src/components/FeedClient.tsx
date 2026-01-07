@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
 import type { NewsItem } from "@/lib/types";
+import NewsArticle from "./NewsArticle";
+
 
 export default function FeedClient({ items }: { items: NewsItem[] }) {
   const sources = useMemo(() => {
@@ -40,7 +41,6 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
     });
   }
 
-  // --- Option C: Dropdown sources ---
   const [sourcesOpen, setSourcesOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -218,82 +218,7 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
       {/* Columns layout (masonry-like) */}
       <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((it) => (
-          <article
-            key={it.id}
-            className="
-              break-inside-avoid mb-6
-              group relative overflow-hidden rounded-2xl border bg-white
-              shadow-sm transition
-              hover:shadow-lg hover:border-zinc-200
-              focus-within:ring-2 focus-within:ring-black/10
-            "
-          >
-            <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-              <div className="absolute inset-0 rounded-2xl ring-1 ring-black/5" />
-            </div>
-
-            {it.image && (
-              <div className="relative h-44 w-full overflow-hidden bg-zinc-100">
-                <Image
-                  src={it.image}
-                  alt=""
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
-                  loading="lazy"
-                  onError={(e) => {
-                    const wrapper = e.currentTarget.parentElement;
-                    if (wrapper) wrapper.style.display = "none";
-                  }}
-                />
-                <div className="pointer-events-none absolute inset-0 from-black/30 via-black/0 to-black/0" />
-
-                {it.image.startsWith("/sources/") && (
-                  <span className="news-item-image-source">
-                    {it.sourceName}
-                  </span>
-                )}
-              </div>
-            )}
-
-            <div className="p-4 space-y-2">
-              <div className="news-item-meta">
-                <span className="meta-badge">
-                  {it.sourceName}
-                </span>
-                <span className="meta-sep">•</span>
-
-                {it.publishedAt && it.sourceId !== "f1" ? (
-                  <time className="news-item-date" dateTime={it.publishedAt}>
-                    {new Date(it.publishedAt).toLocaleDateString(undefined, {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </time>
-                ) : (
-                  <span className="news-item-date">Undated</span>
-                )}
-              </div>
-
-              <h2 className="news-item-title">
-                <a
-                  href={it.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="outline-none hover:underline focus-visible:underline"
-                >
-                  {it.title}
-                </a>
-              </h2>
-
-              {it.summary && (
-                <p className="news-item-summary">
-                  {it.summary}
-                </p>
-              )}
-            </div>
-          </article>
+          <NewsArticle key={it.id} article={it} />
         ))}
 
         {filtered.length === 0 && (
