@@ -5,15 +5,8 @@ import type { NewsItem } from "@/lib/types";
 import NewsArticle from "./NewsArticle";
 
 
-export default function FeedClient({ items, selected: selectedProp, SearchQuery: SearchQueryProp, resultCount }:
-  { items: NewsItem[]; selected?: Set<string>; SearchQuery?: string; resultCount?: number }) {
-  const sources = useMemo(() => {
-    const map = new Map<string, string>();
-    for (const it of items) map.set(it.sourceId, it.sourceName);
-    return Array.from(map.entries())
-      .map(([id, name]) => ({ id, name }))
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }, [items]);
+export default function FeedClient({ items, selected: selectedProp, SearchQuery: SearchQueryProp, resultCount, sources }:
+  { items: NewsItem[]; sources: { id: string; name: string }[]; selected?: Set<string>; SearchQuery?: string; resultCount?: number }) {
 
   const SearchQuery = SearchQueryProp ?? "";
 

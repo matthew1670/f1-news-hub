@@ -30,7 +30,7 @@ export default function Header({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <SearchBox value={q} onChange={setQ} />
 
-        <div className="lg:hidden flex items-center gap-2">
+        <div className="lg:hidden flex items-center gap-2 sm:width-full justify-end">
           <SourcesDropdown
             sources={sources}
             selected={selected}

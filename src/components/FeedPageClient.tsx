@@ -15,11 +15,11 @@ export default function FeedPageClient({ items }: { items: NewsItem[] }) {
       .sort((a, b) => a.name.localeCompare(b.name));
   }, [items]);
 
-  const [selected, setSelected] = useState<Set<string>>(() => new Set(sources.map((s) => s.id)));
+  const [selectedSources, setSelectedSources] = useState<Set<string>>(() => new Set(sources.map((s) => s.id)));
   const [SearchQuery, setSearchQuery] = useState("");
 
   function toggleSource(id: string) {
-    setSelected((prev) => {
+    setSelectedSources((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
@@ -28,20 +28,20 @@ export default function FeedPageClient({ items }: { items: NewsItem[] }) {
   }
 
   function reset() {
-    setSelected(new Set(sources.map((s) => s.id)));
+    setSelectedSources(new Set(sources.map((s) => s.id)));
   }
 
   const resultCount = useMemo(() => {
     const query = SearchQuery.trim().toLowerCase();
     return items.filter((it) => {
-      const sourceOk = selected.has(it.sourceId);
+      const sourceOk = selectedSources.has(it.sourceId);
       const queryOk =
         !query ||
         it.title.toLowerCase().includes(query) ||
         (it.summary?.toLowerCase().includes(query) ?? false);
       return sourceOk && queryOk;
     }).length;
-  }, [items, selected, SearchQuery]);
+  }, [items, selectedSources, SearchQuery]);
 
   return (
     <div className="lg:grid lg:grid-cols-[280px_1fr] lg:gap-6">
@@ -50,18 +50,18 @@ export default function FeedPageClient({ items }: { items: NewsItem[] }) {
           q={SearchQuery}
           setQ={setSearchQuery}
           sources={sources}
-          selected={selected}
+          selected={selectedSources}
           toggleSource={toggleSource}
           reset={reset}
         />
       </div>
 
       <aside className="hidden lg:block">
-        <Sidebar sources={sources} selected={selected} onToggleSource={toggleSource} onReset={reset} />
+        <Sidebar sources={sources} selected={selectedSources} onToggleSource={toggleSource} onReset={reset} />
       </aside>
 
       <div>
-        <FeedClient items={items} selected={selected} SearchQuery={SearchQuery} resultCount={resultCount} />
+        <FeedClient items={items} sources={sources} selected={selectedSources} SearchQuery={SearchQuery} resultCount={resultCount} />
       </div>
     </div>
   );
