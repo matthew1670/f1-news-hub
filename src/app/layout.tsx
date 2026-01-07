@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,6 +27,7 @@ export default function RootLayout({
         <footer className="border-t p-4 text-sm opacity-60">
           &copy; 2024 F1 News Hub. Data sourced from public RSS feeds.
         </footer>
+        <Analytics/> 
       </body>
     </html>
   );
