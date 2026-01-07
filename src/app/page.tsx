@@ -1,4 +1,4 @@
-import FeedClient from "@/components/FeedClient";
+import FeedPageClient from "@/components/FeedPageClient";
 import type { NewsItem } from "@/lib/types";
 
 async function getItems(): Promise<NewsItem[]> {
@@ -11,5 +11,9 @@ async function getItems(): Promise<NewsItem[]> {
 
 export default async function Page() {
   const items = await getItems();
-  return <FeedClient items={items} />;
+  return (
+    <main className="mx-auto max-w-6xl px-4 py-6 min-h-screen">
+      <FeedPageClient items={items} />
+    </main>
+  );
 }
