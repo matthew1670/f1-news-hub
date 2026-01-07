@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import type { NewsItem } from "@/lib/types";
 import Sidebar from "./Sidebar";
 import FeedClient from "./FeedClient";
@@ -10,11 +10,13 @@ export default function FeedPageClient({ items }: { items: NewsItem[] }) {
   const sources = useMemo(() => {
     const map = new Map<string, string>();
     for (const it of items) map.set(it.sourceId, it.sourceName);
-    return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
+    return Array.from(map.entries())
+      .map(([id, name]) => ({ id, name }))
+      .sort((a, b) => a.name.localeCompare(b.name));
   }, [items]);
 
   const [selected, setSelected] = useState<Set<string>>(() => new Set(sources.map((s) => s.id)));
-  const [q, setQ] = useState("");
+  const [SearchQuery, setSearchQuery] = useState("");
 
   function toggleSource(id: string) {
     setSelected((prev) => {
@@ -30,7 +32,7 @@ export default function FeedPageClient({ items }: { items: NewsItem[] }) {
   }
 
   const resultCount = useMemo(() => {
-    const query = q.trim().toLowerCase();
+    const query = SearchQuery.trim().toLowerCase();
     return items.filter((it) => {
       const sourceOk = selected.has(it.sourceId);
       const queryOk =
@@ -39,14 +41,14 @@ export default function FeedPageClient({ items }: { items: NewsItem[] }) {
         (it.summary?.toLowerCase().includes(query) ?? false);
       return sourceOk && queryOk;
     }).length;
-  }, [items, selected, q]);
+  }, [items, selected, SearchQuery]);
 
   return (
     <div className="lg:grid lg:grid-cols-[280px_1fr] lg:gap-6">
       <div className="lg:col-span-2">
         <Header
-          q={q}
-          setQ={setQ}
+          q={SearchQuery}
+          setQ={setSearchQuery}
           sources={sources}
           selected={selected}
           toggleSource={toggleSource}
@@ -59,7 +61,7 @@ export default function FeedPageClient({ items }: { items: NewsItem[] }) {
       </aside>
 
       <div>
-        <FeedClient items={items} selected={selected} q={q} resultCount={resultCount} />
+        <FeedClient items={items} selected={selected} SearchQuery={SearchQuery} resultCount={resultCount} />
       </div>
     </div>
   );
