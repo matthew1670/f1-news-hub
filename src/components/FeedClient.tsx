@@ -77,8 +77,8 @@ export default function FeedClient({ items }: { items: NewsItem[] }) {
       </header>
 
       <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((it, i) => (
-          <NewsArticle key={it.id} article={it} isFeatured={i === 0} />
+        {filtered.map((it) => (
+          <NewsArticle key={it.id} article={it} />
         ))}
 
         {filtered.length === 0 && (
