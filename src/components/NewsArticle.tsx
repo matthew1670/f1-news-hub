@@ -10,7 +10,6 @@ export default function NewsArticle({ article, isFeatured }: { article: NewsItem
           day: "numeric",
         })
       : "Undated";
-
   return (
     <article className={` ${ isFeatured ? 'col-span-2 row-span-2' : '' } break-inside-avoid mb-6 group relative overflow-hidden rounded-2xl border bg-black shadow-sm transition hover:shadow-lg hover:border-zinc-200 focus-within:ring-4 focus-within:ring-black/80 ${isFeatured ? "lg:col-span-2" : ""}`}>
       {/* Image area becomes the whole card */}
