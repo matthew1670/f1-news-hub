@@ -63,7 +63,12 @@ function pickImage(item: any): string | undefined {
 export async function GET() {
   // Serve from cache if fresh
   if (CACHE && Date.now() - CACHE.at < TTL_MS) {
-    return NextResponse.json({ items: CACHE.items, cached: true });
+    const age = Date.now() - CACHE.at;
+    console.log(`[api/items] cache hit — age=${age}ms, ttl=${TTL_MS}ms, items=${CACHE.items.length}`);
+    return NextResponse.json(
+      { items: CACHE.items, cached: true },
+      { headers: { "Cache-Control": `public, max-age=0, s-maxage=${Math.floor(TTL_MS / 1000)}` } }
+    );
   }
 
   const results = await Promise.allSettled(
@@ -129,5 +134,10 @@ export async function GET() {
 
   CACHE = { at: Date.now(), items: deduped };
 
-  return NextResponse.json({ items: deduped, cached: false });
+  console.log(`[api/items] cache miss — fetched=${merged.length}, deduped=${deduped.length}, cache updated at ${new Date(CACHE.at).toISOString()}`);
+
+  return NextResponse.json(
+    { items: deduped, cached: false },
+    { headers: { "Cache-Control": `public, max-age=0, s-maxage=${Math.floor(TTL_MS / 1000)}` } }
+  );
 }
