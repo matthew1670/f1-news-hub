@@ -2,14 +2,28 @@ import Image from "next/image";
 import type { NewsItem } from "@/lib/types";
 
 export default function NewsArticle({ article }: { article: NewsItem }) {
+    // Some feeds return relative image URLs like "/sites/..." which Next Image treats as local.
+    // Those paths may include query strings (e.g. ?itok=...) which are rejected unless explicitly allowed.
+    // Resolve relative paths against the item's source URL so that Next Image treats them as remote.
+    const imageSrc = article.image
+        ? article.image.startsWith("/")
+            ? (() => {
+                  try {
+                      return new URL(article.image, article.url).toString();
+                  } catch {
+                      return article.image;
+                  }
+              })()
+            : article.image
+        : undefined;
 
     return (
         <article className="cursor-pointer break-inside-avoid mb-6 group relative overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:shadow-lg hover:border-zinc-200 focus-within:ring-2 focus-within:ring-black/10">
             <a href={article.url} target="_blank" rel="noreferrer">
-                {article.image && (
+                {imageSrc && (
                     <div className="relative h-44 w-full overflow-hidden bg-zinc-100">
                         <Image
-                            src={article.image}
+                            src={imageSrc}
                             alt=""
                             fill
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

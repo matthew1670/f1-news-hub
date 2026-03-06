@@ -14,6 +14,7 @@ export const FEEDS: FeedDef[] = [
   { id: "f1technical", name: "F1 Technical", url: "https://www.f1technical.net/rss/news.xml" },
   { id: "kymillman", name: "KyMillman.com", url: "https://www.kymillman.com/feed" },
   { id: "gpfans", name: "GPFans", url: "https://www.gpfans.com/en/rss.xml" },
+  { id: "BBC_F1", name: "BBC F1", url: "https://feeds.bbci.co.uk/sport/formula1/rss.xml" },
 ];
 
 export const FEED_DEFAULT_IMAGES: Record<string, string> = {
@@ -26,4 +27,5 @@ export const FEED_DEFAULT_IMAGES: Record<string, string> = {
   f1technical: "https://f1tcdn.net/images/banners/f1t_logo2.gif",
   kymillman: "https://www.kymillman.com/wp-content/uploads/2024/11/f1-rain-race-shot.jpg",
   gpfans: "/sources/racefansdotnet.jpg",
+  BBC_F1: "/sources/bbc-logo.png",
 };
