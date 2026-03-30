@@ -41,7 +41,12 @@ export default function FeedClient({ items, selected: selectedProp, SearchQuery:
         ))}
 
         {filtered.length === 0 && (
-          <p className="no-results">No results.</p>
+          <div className="col-span-full rounded-3xl border border-dashed border-zinc-300 bg-zinc-50 p-10 text-center text-zinc-700 shadow-sm">
+            <p className="text-xl font-semibold text-zinc-900 mb-2">Nothing matched your search or filters.</p>
+            <p className="max-w-md mx-auto text-sm leading-6">
+              Try clearing your search query or selecting more sources to see the latest F1 headlines.
+            </p>
+          </div>
         )}
       </section>
     </main>
